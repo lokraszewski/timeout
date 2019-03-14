@@ -66,11 +66,19 @@ int main(int argc, char const *argv[])
 ## Other
 Please check the `examples` folder for more.
 
+# Build Tests + Example
+```
+mkdir build && cd build
+cmake ..
+make
+```
+
 # Current support
 Currently the library supports STL based timers but hopefully this can be implemented for embedded platforms.
 
 The api is the following format:
 ```C++
+
 template <typename interval_t>
 class Base
 {
