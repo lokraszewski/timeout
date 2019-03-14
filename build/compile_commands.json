@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/media/sf_git/timeout/build/timeout",
+  "command": "/usr/bin/c++   -I/media/sf_git/timeout/build/timeout -I/media/sf_git/timeout/timeout -I/media/sf_git/timeout/timeout/include    -g   -Wall -Wextra -Werror -std=gnu++1z -o CMakeFiles/timeout.dir/src/impl/timer_unix_ms.cpp.o -c /media/sf_git/timeout/timeout/src/impl/timer_unix_ms.cpp",
+  "file": "/media/sf_git/timeout/timeout/src/impl/timer_unix_ms.cpp"
+},
+{
+  "directory": "/media/sf_git/timeout/build/test",
+  "command": "/usr/bin/c++  -DSPDLOG_FMT_EXTERNAL -I/media/sf_git/timeout/build/test -I/media/sf_git/timeout/test -I/media/sf_git/timeout/timeout/include -isystem /home/lukasz/.conan/data/spdlog/1.2.1/bincrafters/stable/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/lukasz/.conan/data/fmt/5.2.1/bincrafters/stable/package/1a651c5b4129ad794b88522bece2281a7453aee4/include -isystem /home/lukasz/.conan/data/catch2/2.4.1/bincrafters/stable/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include    -g   -Wall -Wextra -Werror -std=gnu++1z -o CMakeFiles/timeout_unix_test.dir/timeout_unix_test.cpp.o -c /media/sf_git/timeout/test/timeout_unix_test.cpp",
+  "file": "/media/sf_git/timeout/test/timeout_unix_test.cpp"
+}
+]

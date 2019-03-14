@@ -1,3 +1,11 @@
+CMakeFiles/*
+bin/*
+build/*
+
+Makefile
+generated/*
+
+
 # Prerequisites
 *.d
 
