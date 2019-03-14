@@ -16,9 +16,10 @@ namespace timeout
  * @date       14-Mar-2019
  * @brief      Base API
  *
- * @details All units are in timer ticks, up to the user.
+ * @tparam     interval_t  Type for interval
+ *
+ * @details
  */
-
 template <typename interval_t>
 class Base
 {
