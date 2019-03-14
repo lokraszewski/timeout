@@ -5,12 +5,12 @@
  * @Last Modified time: 14-03-2019
  */
 
-#include "timeout/impl/timer_unix_ms.h"
+#include "timeout/impl/timer_stl_ms.h"
 #include <iostream>
 namespace timeout
 {
 
-namespace Unix
+namespace standard
 {
 
 /*
@@ -19,21 +19,12 @@ namespace Unix
 
 TimerMs::TimerMs(const bool repeat) : m_repeat(repeat) {}
 
-TimerMs::TimerMs(const size_t ticks, const handler_t &callback, const bool repeat) : m_repeat(repeat)
-{
-  std::cout << __FUNCTION__ << std::endl;
-  start(ticks, callback);
-}
+TimerMs::TimerMs(const size_t ticks, const handler_t &callback, const bool repeat) : m_repeat(repeat) { start(ticks, callback); }
 
-TimerMs::~TimerMs()
-{
-  std::cout << __FUNCTION__ << std::endl;
-  stop();
-}
+TimerMs::~TimerMs() { stop(); }
 
 void TimerMs::start(const size_t ticks, const handler_t &callback)
 {
-  std::cout << __FUNCTION__ << std::endl;
 
   stop();
 
@@ -43,7 +34,6 @@ void TimerMs::start(const size_t ticks, const handler_t &callback)
   }
 
   m_thread = std::thread([=]() {
-    std::cout << __FUNCTION__ << std::endl;
     auto locked = std::unique_lock<std::mutex>(m_mutex);
 
     while (!m_stop) // We hold the mutex that protects stop
@@ -52,23 +42,16 @@ void TimerMs::start(const size_t ticks, const handler_t &callback)
 
       if (result == std::cv_status::timeout)
       {
-        std::cout << __FUNCTION__ << " : timeout" << std::endl;
+        if (m_repeat == false)
+          m_stop = true;
         callback();
       }
-      else
-      {
-        std::cout << __FUNCTION__ << " : destroyed" << std::endl;
-      }
-
-      if (m_repeat == false)
-        m_stop = true;
     }
   });
 }
 
 void TimerMs::stop()
 {
-  std::cout << __FUNCTION__ << std::endl;
 
   {
     // Set the predicate
@@ -84,17 +67,13 @@ void TimerMs::stop()
     m_thread.join();
   }
 }
-size_t TimerMs::operator()()
-{
-  std::cout << __FUNCTION__ << std::endl;
-  return 0;
-}
+size_t TimerMs::operator()() { return 0; }
 
 bool TimerMs::running()
 {
   auto l = std::unique_lock<std::mutex>(m_mutex);
   return !m_stop;
 }
-} // namespace Unix
+} // namespace standard
 
 } // namespace timeout

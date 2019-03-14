@@ -14,15 +14,16 @@
 namespace timeout
 {
 
-namespace Unix
+namespace standard
 {
 
 /**
  * @author     lokraszewski
  * @date       14-Mar-2019
- * @brief      Base API
+ * @brief      Uses the STL components to construct a timer object. You can use this with RAII and the resources will be automatically
+ * cleaned up on destruction
  *
- * @details All units are in timer ticks, up to the user.
+ * @details    In this case the units are in ms but it would be easy to take a interval of any time
  */
 class TimerMs : public Base
 {
@@ -44,5 +45,5 @@ public:
   bool   running() override;
 };
 
-} // namespace Unix
+} // namespace standard
 } // namespace timeout

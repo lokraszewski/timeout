@@ -15,7 +15,7 @@
 #include <spdlog/spdlog.h>
 
 #include "timeout/base.h"
-#include "timeout/impl/timer_unix_ms.h"
+#include "timeout/impl/timer_stl_ms.h"
 
 #define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 
@@ -42,7 +42,7 @@ static void sleep_ms(const size_t ms)
 
 TEST_CASE("Single Call backs")
 {
-  using namespace timeout::Unix;
+  using namespace timeout::standard;
 
   SECTION("Timer 1000ms expires after 2000ms. ")
   {
@@ -67,7 +67,7 @@ TEST_CASE("Single Call backs")
 }
 TEST_CASE("Repeat counter call backs")
 {
-  using namespace timeout::Unix;
+  using namespace timeout::standard;
 
   SECTION("Timer 100ms triggered at least 10 times in 1s. ")
   {
@@ -77,5 +77,30 @@ TEST_CASE("Repeat counter call backs")
     REQUIRE(trig == 0);
     sleep_ms(1010);
     REQUIRE(trig >= 10);
+  }
+}
+
+TEST_CASE("Elapsed")
+{
+  using namespace timeout::standard;
+  SECTION("5000ms")
+  {
+    const size_t required_time   = 1000;
+    const size_t required_margin = 10;
+    size_t       ms              = 0;
+    {
+      const std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+      TimerMs                                     timer(required_time);
+      while (timer.running())
+      {
+        ;
+      }
+      const std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+      ms                                              = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    }
+
+    const Approx target = Approx(required_time).margin(required_margin);
+    l_log->info("Target {}ms +-{}ms, actual: {}", required_time, required_margin, ms);
+    REQUIRE(ms == target);
   }
 }
