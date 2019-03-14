@@ -33,5 +33,5 @@ conan_cmake_run(
 
 
 add_subdirectory(${PROJECT_NAME})
-# add_subdirectory(example)
+add_subdirectory(example)
 add_subdirectory(test)

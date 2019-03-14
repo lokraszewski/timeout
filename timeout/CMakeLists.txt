@@ -1,6 +1,6 @@
 ## Add serial library
 add_library(${PROJECT_NAME}
-  src/impl/timer_stl_ms.cpp
+  src/impl/timer_stl.cpp
   )
 
 target_include_directories(${PROJECT_NAME}

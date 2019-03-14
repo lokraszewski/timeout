@@ -15,13 +15,16 @@
 #include <spdlog/spdlog.h>
 
 #include "timeout/base.h"
-#include "timeout/impl/timer_stl_ms.h"
+#include "timeout/impl/timer_stl.h"
 
 #define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 
 #include <catch2/catch.hpp>
 
 static auto l_log = spdlog::stdout_color_mt("catch");
+
+using namespace timeout::standard;
+using namespace std::chrono_literals;
 
 static void sleep_ms(const size_t ms)
 {
@@ -32,7 +35,7 @@ static void sleep_ms(const size_t ms)
 
   for (size_t i = 0; i < ms100; ++i)
   {
-    std::cout << "SLeeping [" << wait[i % sz] << "]" << std::flush;
+    std::cout << "sleeping ... [" << wait[i % sz] << "]" << std::flush;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     std::cout << '\r' << std::flush;
   }
@@ -48,7 +51,7 @@ TEST_CASE("Single Call backs")
   {
     bool triggered = false;
 
-    TimerMs timer(1000, [&]() { triggered = true; });
+    Timer<std::chrono::milliseconds> timer(std::chrono::milliseconds(1000), [&]() { triggered = true; });
 
     REQUIRE(triggered == false);
     sleep_ms(2000);
@@ -59,7 +62,7 @@ TEST_CASE("Single Call backs")
   {
     bool triggered = false;
 
-    TimerMs timer(2000, [&]() { triggered = true; });
+    Timer<std::chrono::milliseconds> timer(std::chrono::milliseconds(2000), [&]() { triggered = true; });
     REQUIRE(triggered == false);
     sleep_ms(1000);
     REQUIRE(triggered == false);
@@ -67,30 +70,53 @@ TEST_CASE("Single Call backs")
 }
 TEST_CASE("Repeat counter call backs")
 {
-  using namespace timeout::standard;
 
   SECTION("Timer 100ms triggered at least 10 times in 1s. ")
   {
     size_t trig = 0;
 
-    TimerMs timer(100, [&]() { ++trig; }, true);
+    Timer<std::chrono::milliseconds> timer(100ms, [&]() { ++trig; }, true);
     REQUIRE(trig == 0);
     sleep_ms(1010);
     REQUIRE(trig >= 10);
   }
 }
 
+TEST_CASE("Timeout check")
+{
+  SECTION("Operation times out after 2 seconds")
+  {
+    size_t                           pointless_work = 10;
+    Timer<std::chrono::milliseconds> t(1000ms);
+    bool                             timeout_occured = false;
+
+    while (pointless_work--)
+    {
+      /*Each pointless work item takes 1s. */
+      sleep_ms(1000);
+      if (t())
+      {
+        /* We have timeout!*/
+        timeout_occured = true;
+        break;
+      }
+    }
+
+    REQUIRE(timeout_occured == true);
+  }
+}
+
 TEST_CASE("Elapsed")
 {
-  using namespace timeout::standard;
   SECTION("5000ms")
   {
     const size_t required_time   = 1000;
-    const size_t required_margin = 10;
+    const size_t required_margin = 20;
     size_t       ms              = 0;
     {
       const std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-      TimerMs                                     timer(required_time);
+      Timer<std::chrono::milliseconds>            timer(1000ms);
+
       while (timer.running())
       {
         ;
