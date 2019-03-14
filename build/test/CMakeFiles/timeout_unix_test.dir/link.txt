@@ -1,1 +1,0 @@
-/usr/bin/c++    -g   CMakeFiles/timeout_unix_test.dir/timeout_unix_test.cpp.o  -o ../bin/timeout_unix_test ../lib/libtimeout.a -lpthread /home/lukasz/.conan/data/fmt/5.2.1/bincrafters/stable/package/1a651c5b4129ad794b88522bece2281a7453aee4/lib/libfmtd.a 

@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libtimeout.a  CMakeFiles/timeout.dir/src/impl/timer_unix_ms.cpp.o
-/usr/bin/ranlib ../lib/libtimeout.a
