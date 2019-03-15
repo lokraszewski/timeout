@@ -2,7 +2,7 @@
  * @Author: Lukasz
  * @Date:   14-03-2019
  * @Last Modified by:   Lukasz
- * @Last Modified time: 14-03-2019
+ * @Last Modified time: 15-03-2019
  */
 
 #pragma once
@@ -29,10 +29,10 @@ namespace standard
  * @details    In this case the units are in ms but it would be easy to take a interval of any time
  */
 template <typename interval_t>
-class Timer : public Base<interval_t>
+class Timer : public Base<interval_t, std::function<void(void)>>
 {
 public:
-  using handler_t = typename Base<interval_t>::handler_t;
+  using handler_t = typename std::function<void(void)>;
 
   Timer(const bool repeat = false) : m_repeat(repeat) {}
 
