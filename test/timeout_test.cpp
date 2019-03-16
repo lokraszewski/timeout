@@ -1,8 +1,8 @@
 /*
  * @Author: Lukasz
  * @Date:   19-11-2018
- * @Last Modified by:   Lukasz
- * @Last Modified time: 14-03-2019
+ * @Last Modified by:   Lukasz Okraszewski
+ * @Last Modified time: 16-03-2019
  */
 
 #include <array>
@@ -14,8 +14,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-#include "timeout/base.h"
-#include "timeout/impl/timer_stl.h"
+#include "timeout/timer.h"
 
 #define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
 

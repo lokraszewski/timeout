@@ -1,12 +1,11 @@
 /*
  * @Author: Lukasz
  * @Date:   14-03-2019
- * @Last Modified by:   Lukasz
- * @Last Modified time: 15-03-2019
+ * @Last Modified by:   Lukasz Okraszewski
+ * @Last Modified time: 16-03-2019
  */
 
 #pragma once
-#include "timeout/base.h"
 
 #include <chrono>
 #include <condition_variable>
@@ -29,7 +28,7 @@ namespace standard
  * @details    In this case the units are in ms but it would be easy to take a interval of any time
  */
 template <typename interval_t>
-class Timer : public Base<interval_t, std::function<void(void)>>
+class Timer
 {
 public:
   using handler_t = typename std::function<void(void)>;
@@ -43,7 +42,7 @@ public:
 
   ~Timer() { stop(); }
 
-  void start(const interval_t &interval, const handler_t &callback) override
+  void start(const interval_t &interval, const handler_t &callback)
   {
     stop();
 
@@ -68,7 +67,7 @@ public:
       }
     });
   }
-  void stop() override
+  void stop()
   {
     {
       // Set the predicate
@@ -84,15 +83,15 @@ public:
       m_thread.join();
     }
   }
-  bool operator()() override { return elapsed(); }
+  bool operator()() { return elapsed(); }
 
-  bool running() override
+  bool running()
   {
     auto l = std::unique_lock<std::mutex>(m_mutex);
     return !m_stop;
   }
 
-  bool elapsed() override
+  bool elapsed()
   {
     auto l = std::unique_lock<std::mutex>(m_mutex);
     return m_stop;

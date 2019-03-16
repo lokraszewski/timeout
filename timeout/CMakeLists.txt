@@ -1,23 +1,18 @@
 ## Add serial library
 add_library(${PROJECT_NAME}
-  src/impl/timer_stl.cpp
+  INTERFACE
   )
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC
+    INTERFACE
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-# target_link_libraries(${PROJECT_NAME}
-#   CONAN_PKG::fmt
-#   CONAN_PKG::boost
+# set_target_properties(${PROJECT_NAME}
+#   PROPERTIES
+#     CXX_STANDARD 14
 # )
-
-set_target_properties(${PROJECT_NAME}
-  PROPERTIES
-    CXX_STANDARD 17
-)
 
 
 include(GNUInstallDirs)
