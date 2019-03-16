@@ -24,11 +24,12 @@ endif()
 
 
 conan_cmake_run(
+  REQUIRES fmt/5.2.1@bincrafters/stable
   REQUIRES spdlog/1.2.1@bincrafters/stable
   REQUIRES catch2/2.4.1@bincrafters/stable
   BASIC_SETUP
   CMAKE_TARGETS
-  BUILD spdlog catch2 #build all from source to ensure binary compatibility
+  BUILD spdlog catch2 fmt #build all from source to ensure binary compatibility
 )
 
 
