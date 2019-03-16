@@ -28,7 +28,7 @@ conan_cmake_run(
   REQUIRES catch2/2.4.1@bincrafters/stable
   BASIC_SETUP
   CMAKE_TARGETS
-  BUILD MISSING
+  BUILD spdlog catch2 #build all from source to ensure binary compatibility
 )
 
 
