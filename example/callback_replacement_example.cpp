@@ -21,7 +21,7 @@ static auto l_log = spdlog::stdout_color_mt("example2");
 using namespace timeout::standard;
 using namespace std::chrono_literals;
 
-Timer<std::chrono::milliseconds> timer1(1000ms, [&]() { l_log->info("Timer original callback"); }, true);
+Timer<std::chrono::milliseconds> timer1(1000ms, [l_log]() { l_log->info("Timer original callback"); }, true);
 
 int main(int argc, char const *argv[])
 {
