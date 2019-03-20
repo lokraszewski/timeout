@@ -1,2 +1,3 @@
--Itimeout/include
+-I../catch2/include
 -I../spdlog/include
+-Itimeout/include

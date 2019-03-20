@@ -30,7 +30,7 @@ using namespace std::chrono_literals;
 // This timer prints info message to the screen every 5s to stop travis build
 // from timeout.
 Timer<std::chrono::milliseconds>
-    g_timer(5000ms, [&]() { l_log->info("Test running."); }, true);
+    g_timer(5000ms, []() { l_log->info("Test running."); }, true);
 
 TEST_CASE("Single Call backs") {
 
