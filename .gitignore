@@ -38,3 +38,5 @@ generated/*
 *.exe
 *.out
 *.app
+
+*.tags*
