@@ -21,25 +21,27 @@ static auto l_log = spdlog::stdout_color_mt("example1");
 using namespace timeout::standard;
 using namespace std::chrono_literals;
 
-Timer<std::chrono::milliseconds> timer1(1000ms, []() { l_log->info("Timer1 callback."); }, true);
-Timer<std::chrono::milliseconds> timer2(3000ms, []() { l_log->info("Timer2 callback."); }, true);
+Timer<std::chrono::milliseconds>
+    timer1(1000ms, []() { l_log->info("Timer1 callback."); }, true);
+Timer<std::chrono::milliseconds>
+    timer2(3000ms, []() { l_log->info("Timer2 callback."); }, true);
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
+
   (void)argc;
   (void)argv;
   l_log->info(
-      "Timer callbacks will continue for the life time of the application. Etner 'x' to quit, 'a' to kill timer 1, 'b' to kill timer 2.");
+      "Timer callbacks will continue for the life time of the application. "
+      "Etner 'x' to quit, 'a' to kill timer 1, 'b' to kill timer 2.");
 
   char opt;
 
-  for (;;)
-  {
+  for (;;) {
     std::cin >> opt;
 
-    switch (opt)
-    {
-    case 'x': return 0;
+    switch (opt) {
+    case 'x':
+      return 0;
     case 'a':
       timer1.stop();
       l_log->info("Killing timer 1");
