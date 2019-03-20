@@ -1,8 +1,8 @@
 /*
  * @Author: Lukasz
  * @Date:   19-11-2018
- * @Last Modified by:   Lukasz Okraszewski
- * @Last Modified time: 16-03-2019
+ * @Last Modified by:   Lukasz
+ * @Last Modified time: 18-03-2019
  */
 
 #include <array>
@@ -26,26 +26,11 @@ static auto l_log = spdlog::stdout_color_mt("catch");
 using namespace timeout::standard;
 using namespace std::chrono_literals;
 
-static void sleep_ms(const size_t ms)
-{
-  const char   wait[] = {'-', '\\', '|', '/', '-'};
-  const size_t sz     = 4;
-
-  const size_t ms100 = ms / 100;
-
-  for (size_t i = 0; i < ms100; ++i)
-  {
-    std::cout << "sleeping ... [" << wait[i % sz] << "]" << std::flush;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    std::cout << '\r' << std::flush;
-  }
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(ms % 100));
-}
+// This timer prints info message to the screen every 5s to stop travis build from timeout.
+Timer<std::chrono::milliseconds> g_timer(5000ms, [&]() { l_log->info("Test running."); }, true);
 
 TEST_CASE("Single Call backs")
 {
-  using namespace timeout::standard;
 
   SECTION("Timer 1000ms expires after 2000ms. ")
   {
@@ -54,8 +39,10 @@ TEST_CASE("Single Call backs")
     Timer<std::chrono::milliseconds> timer(std::chrono::milliseconds(1000), [&]() { triggered = true; });
 
     REQUIRE(triggered == false);
-    sleep_ms(2000);
+    REQUIRE(timer() == false);
+    std::this_thread::sleep_for(2000ms);
     REQUIRE(triggered == true);
+    REQUIRE(timer() == true);
   }
 
   SECTION("Timer 2000ms, auto stopped ")
@@ -64,12 +51,23 @@ TEST_CASE("Single Call backs")
 
     Timer<std::chrono::milliseconds> timer(std::chrono::milliseconds(2000), [&]() { triggered = true; });
     REQUIRE(triggered == false);
-    sleep_ms(1000);
+    REQUIRE(timer() == false);
+    std::this_thread::sleep_for(1000ms);
     REQUIRE(triggered == false);
+    REQUIRE(timer() == false);
   }
 }
+
 TEST_CASE("Repeat counter call backs")
 {
+
+  SECTION("Repeat timeout does not expire. ")
+  {
+    Timer<std::chrono::milliseconds> timer(10ms, []() {}, true);
+    REQUIRE(timer() == false);
+    std::this_thread::sleep_for(5000ms);
+    REQUIRE(timer() == false);
+  }
 
   SECTION("Timer 100ms triggered at least 10 times in 1s. ")
   {
@@ -77,8 +75,16 @@ TEST_CASE("Repeat counter call backs")
 
     Timer<std::chrono::milliseconds> timer(100ms, [&]() { ++trig; }, true);
     REQUIRE(trig == 0);
-    sleep_ms(1010);
+    std::this_thread::sleep_for(1050ms);
     REQUIRE(trig >= 10);
+  }
+
+  SECTION("Repeat, second timer.")
+  {
+    size_t                      trig = 0;
+    Timer<std::chrono::seconds> timer(2s, [&]() { ++trig; }, true);
+    std::this_thread::sleep_for(5s);
+    REQUIRE(trig >= 2);
   }
 }
 
@@ -93,7 +99,7 @@ TEST_CASE("Timeout check")
     while (pointless_work--)
     {
       /*Each pointless work item takes 1s. */
-      sleep_ms(1000);
+      std::this_thread::sleep_for(1s);
       if (t())
       {
         /* We have timeout!*/
@@ -108,7 +114,7 @@ TEST_CASE("Timeout check")
 
 TEST_CASE("Elapsed")
 {
-  SECTION("5000ms")
+  SECTION("1000ms")
   {
     const size_t required_time   = 1000;
     const size_t required_margin = 20;
