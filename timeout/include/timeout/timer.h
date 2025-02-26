@@ -31,11 +31,11 @@ template <typename interval_t> class Timer {
 public:
   using handler_t = typename std::function<void(void)>;
 
-  Timer(const bool repeat = false) : m_repeat(repeat) {}
+  Timer(const bool repeat = false) : m_repeat(repeat), m_stop(true) {}
 
   Timer(const interval_t &interval, const handler_t &callback = [](void) {},
         const bool repeat = false)
-      : m_repeat(repeat) {
+      : m_repeat(repeat), m_stop(true) {
     start(interval, callback);
   }
 
@@ -49,7 +49,7 @@ public:
       m_stop = false;
     }
 
-    m_thread = std::thread([=]() {
+    m_thread = std::thread([=, this]() {
       auto locked = std::unique_lock<std::mutex>(m_mutex);
 
       while (!m_stop) // We hold the mutex that protects stop
